@@ -10,17 +10,20 @@
 package org.syntax.jedit;
 
 import javax.swing.JPopupMenu;
+
 import java.awt.Color;
 
 /**
- * Encapsulates default settings for a text area. This can be passed
- * to the constructor once the necessary fields have been filled out.
- * The advantage of doing this over calling lots of set() methods after
- * creating the text area is that this method is faster.
+ * テキストエリアの各種設定値。キャレットの点滅や行数、列数、選択時の色やブラケットの色などがある。
+ * このクラスは、シングルトン・デザインパターンで作れていて、設定値はpublicにしてアクセスしやすくしている。 Encapsulates default
+ * settings for a text area. This can be passed to the constructor once the
+ * necessary fields have been filled out. The advantage of doing this over
+ * calling lots of set() methods after creating the text area is that this
+ * method is faster.
  */
-public class TextAreaDefaults
-{
-	private static TextAreaDefaults DEFAULTS;
+public class TextAreaDefaults {
+	// Singleton Design Pattern.
+	private static TextAreaDefaults instance;
 
 	public InputHandler inputHandler;
 	public SyntaxDocument document;
@@ -46,40 +49,40 @@ public class TextAreaDefaults
 
 	public JPopupMenu popup;
 
+	private TextAreaDefaults() {
+		inputHandler = new DefaultInputHandler();
+		inputHandler.addDefaultKeyBindings();
+		document = new SyntaxDocument();
+		editable = true;
+
+		blockCaret = false;
+		caretVisible = true;
+		caretBlinks = true;
+		electricScroll = 3;
+
+		cols = 80;
+		rows = 25;
+		styles = SyntaxUtilities.getDefaultSyntaxStyles();
+		caretColor = Color.red;
+		selectionColor = new Color(0xccccff);
+		lineHighlightColor = new Color(0xe0e0e0);
+		lineHighlight = true;
+		bracketHighlightColor = Color.pink;
+		bracketHighlight = true;
+		// EOL = EndOfLine
+		eolMarkerColor = Color.orange; // new Color(0x009999);
+		eolMarkers = true; // true;
+		// チルダーの表示
+		paintInvalid = true; // true;
+	}
+
 	/**
-	 * Returns a new TextAreaDefaults object with the default values filled
-	 * in.
+	 * Returns a new TextAreaDefaults object with the default values filled in.
 	 */
-	public static TextAreaDefaults getDefaults()
-	{
-		if(DEFAULTS == null)
-		{
-			DEFAULTS = new TextAreaDefaults();
-
-			DEFAULTS.inputHandler = new DefaultInputHandler();
-			DEFAULTS.inputHandler.addDefaultKeyBindings();
-			DEFAULTS.document = new SyntaxDocument();
-			DEFAULTS.editable = true;
-
-			DEFAULTS.blockCaret = false;
-			DEFAULTS.caretVisible = true;
-			DEFAULTS.caretBlinks = true;
-			DEFAULTS.electricScroll = 3;
-
-			DEFAULTS.cols = 80;
-			DEFAULTS.rows = 25;
-			DEFAULTS.styles = SyntaxUtilities.getDefaultSyntaxStyles();
-			DEFAULTS.caretColor = Color.black; // Color.red;
-			DEFAULTS.selectionColor = new Color(0xccccff);
-			DEFAULTS.lineHighlightColor = new Color(0xe0e0e0);
-			DEFAULTS.lineHighlight = true;
-			DEFAULTS.bracketHighlightColor = Color.black;
-			DEFAULTS.bracketHighlight = true;
-			DEFAULTS.eolMarkerColor = new Color(0x009999);
-			DEFAULTS.eolMarkers = false; // true;
-			DEFAULTS.paintInvalid = false; //true;
+	public static synchronized TextAreaDefaults getInstance() {
+		if (instance == null) {
+			instance = new TextAreaDefaults();
 		}
-
-		return DEFAULTS;
+		return instance;
 	}
 }

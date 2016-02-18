@@ -28,7 +28,7 @@ public class DefaultInputHandler extends InputHandler
 	 */
 	public DefaultInputHandler()
 	{
-		bindings = currentBindings = new Hashtable();
+		bindings = currentBindings = new Hashtable<KeyStroke, Object>();
 	}
 
 	/**
